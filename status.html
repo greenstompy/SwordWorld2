@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>ステータス管理</title>
+    <style>
+        .character-card {
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin: 10px;
+            padding: 20px;
+            width: calc(45% - 20px);
+            min-width: 300px;
+        }
+
+        @media (max-width: 900px) {
+            .character-card {
+                width: calc(100% - 20px);
+            }
+        }
+
+        .character-name-input {
+            width: 100%;
+            padding: 8px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .stat-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 12px 0;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .stat-label {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #333;
+            min-width: 60px;
+        }
+
+        .stat-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .stat-input {
+            width: 70px;
+            padding: 8px;
+            font-size: 1.5em;
+            font-weight: bold;
+            text-align: center;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .stat-max-input {
+            width: 60px;
+            padding: 6px;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-align: center;
+            border: 2px solid #888;
+            border-radius: 5px;
+            background-color: #f5f5f5;
+        }
+
+        .stat-max {
+            font-size: 1.2em;
+            color: #666;
+        }
+
+        .stat-btn {
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            background-color: white;
+            transition: all 0.2s;
+        }
+
+        .stat-btn:hover {
+            background-color: #e9e9e9;
+        }
+
+        .stat-btn:active {
+            transform: scale(0.95);
+        }
+
+        .increase-btn {
+            color: #44ff44;
+        }
+
+        .decrease-btn {
+            color: #ff4444;
+        }
+
+        .stat-buttons {
+            display: flex;
+            gap: 5px;
+            margin: 8px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .stat-buttons .stat-btn {
+            flex: 1;
+            min-width: 50px;
+        }
+
+        .simple-stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .simple-stat input {
+            width: 60px;
+            padding: 5px;
+            text-align: center;
+            font-size: 1.2em;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            flex: 1;
+            min-width: 100px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .copy-btn {
+            background-color: #2196F3;
+            color: white;
+        }
+
+        .copy-btn:hover {
+            background-color: #42A5F5;
+        }
+
+        .delete-btn {
+            background-color: #ff4444;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background-color: #ff6666;
+        }
+
+        .add-character-btn {
+            background-color: #44ff44;
+            color: #333;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 5px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 20px auto;
+            display: block;
+            transition: all 0.3s;
+        }
+
+        .add-character-btn:hover {
+            background-color: #66ff66;
+        }
+
+        .add-character-btn:active {
+            transform: scale(0.95);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin: 30px 0;
+        }
+
+        .hp-bar {
+            width: 100%;
+            height: 8px;
+            background-color: #ddd;
+            border-radius: 4px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+
+        .hp-bar-fill {
+            height: 100%;
+            background-color: #4CAF50;
+            transition: width 0.3s, background-color 0.3s;
+        }
+
+        .hp-bar-fill.low {
+            background-color: #ff9800;
+        }
+
+        .hp-bar-fill.critical {
+            background-color: #f44336;
+        }
+
+        .mp-bar {
+            width: 100%;
+            height: 8px;
+            background-color: #ddd;
+            border-radius: 4px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+
+        .mp-bar-fill {
+            height: 100%;
+            background-color: #2196F3;
+            transition: width 0.3s;
+        }
+
+        @media (max-width: 600px) {
+            .stat-input {
+                width: 60px;
+                font-size: 1.3em;
+            }
+            
+            .stat-max-input {
+                width: 50px;
+                font-size: 1em;
+            }
+            
+            .stat-btn {
+                padding: 5px 6px;
+                font-size: 0.85em;
+            }
+
+            .stat-buttons .stat-btn {
+                min-width: 45px;
+            }
+            
+            .stat-max {
+                font-size: 1em;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .action-btn {
+                width: 100%;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="title">
+            <h3>アステリズムルール</h3>
+        </div>
+        <nav>
+            <ul id="header-menu">
+                <li><a href="index.html">ホーム</a></li>
+                <li><a href="world.html">世界観</a></li>
+                <li><a href="character.html">キャラクター</a></li>
+                <li><a href="rule.html">ルール</a></li>
+                <li><a href="asterism.html">星辰光</a></li>
+                <li><a href="counter.html">カウンター</a></li>
+                <li><a href="status.html">ステータス</a></li>
+                <li><a href="town.html">古都アルザス・ロレーヌ</a></li>
+                <li><a href="item.html">アイテム</a></li>
+            </ul>
+        </nav>
+        <div id="hamburger" class="hamburger">
+            <span></span><span></span><span></span>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1>ステータス管理</h1>
+        
+        <div class="card-container" id="character-container">
+            <!-- キャラクターカードがここに追加されます -->
+        </div>
+
+        <button class="add-character-btn" onclick="addCharacter()">+ キャラクター追加</button>
+    </div>
+
+    <script>
+        // キャラクターデータを管理する配列
+        let characters = [];
+        let nextId = 1;
+
+        // ページ読み込み時にローカルストレージからデータを復元
+        window.addEventListener('load', () => {
+            const saved = localStorage.getItem('characterData');
+            if (saved) {
+                const data = JSON.parse(saved);
+                characters = data.characters;
+                nextId = data.nextId;
+                characters.forEach(char => renderCharacter(char));
+            } else {
+                // 初回はキャラクター1を追加
+                nextId = 1;
+                addCharacter();
+            }
+        });
+
+        // データを保存
+        function saveData() {
+            localStorage.setItem('characterData', JSON.stringify({
+                characters: characters,
+                nextId: nextId
+            }));
+        }
+
+        // 新しいキャラクターを追加
+        function addCharacter() {
+            const character = {
+                id: nextId,
+                name: 'キャラクター' + nextId,
+                hp: { current: 30, max: 30 },
+                mp: { current: 20, max: 20 },
+                accuracy: 10,
+                damage: 10,
+                dodge: 10,
+                protection: 5
+            };
+            nextId++;
+            characters.push(character);
+            renderCharacter(character);
+            saveData();
+        }
+
+        // キャラクターカードをレンダリング
+        function renderCharacter(character) {
+            const container = document.getElementById('character-container');
+            
+            const card = document.createElement('div');
+            card.className = 'character-card';
+            card.dataset.id = character.id;
+            
+            card.innerHTML = `
+                <input type="text" class="character-name-input" value="${character.name}" 
+                       onchange="updateName(${character.id}, this.value)">
+                
+                <div class="stat-row">
+                    <div class="stat-label">HP</div>
+                    <div class="stat-controls">
+                        <input type="number" class="stat-input" id="hp-${character.id}" value="${character.hp.current}" 
+                               onchange="updateCurrentStat(${character.id}, 'hp', this.value)" min="0" max="${character.hp.max}">
+                        <span class="stat-max">/ </span>
+                        <input type="number" class="stat-max-input" value="${character.hp.max}" 
+                               onchange="updateMaxStat(${character.id}, 'hp', this.value)" min="1">
+                    </div>
+                </div>
+                <div class="stat-buttons">
+                    <button class="stat-btn increase-btn" onclick="changeStat(${character.id}, 'hp', 1)">+1</button>
+                    <button class="stat-btn increase-btn" onclick="changeStat(${character.id}, 'hp', 5)">+5</button>
+                    <button class="stat-btn increase-btn" onclick="changeStat(${character.id}, 'hp', 10)">+10</button>
+                    <button class="stat-btn decrease-btn" onclick="changeStat(${character.id}, 'hp', -1)">-1</button>
+                    <button class="stat-btn decrease-btn" onclick="changeStat(${character.id}, 'hp', -5)">-5</button>
+                    <button class="stat-btn decrease-btn" onclick="changeStat(${character.id}, 'hp', -10)">-10</button>
+                </div>
+                <div class="hp-bar">
+                    <div class="hp-bar-fill" id="hp-bar-${character.id}"></div>
+                </div>
+
+                <div class="stat-row">
+                    <div class="stat-label">MP</div>
+                    <div class="stat-controls">
+                        <input type="number" class="stat-input" id="mp-${character.id}" value="${character.mp.current}" 
+                               onchange="updateCurrentStat(${character.id}, 'mp', this.value)" min="0" max="${character.mp.max}">
+                        <span class="stat-max">/ </span>
+                        <input type="number" class="stat-max-input" value="${character.mp.max}" 
+                               onchange="updateMaxStat(${character.id}, 'mp', this.value)" min="1">
+                    </div>
+                </div>
+                <div class="stat-buttons">
+                    <button class="stat-btn increase-btn" onclick="changeStat(${character.id}, 'mp', 1)">+1</button>
+                    <button class="stat-btn increase-btn" onclick="changeStat(${character.id}, 'mp', 5)">+5</button>
+                    <button class="stat-btn increase-btn" onclick="changeStat(${character.id}, 'mp', 10)">+10</button>
+                    <button class="stat-btn decrease-btn" onclick="changeStat(${character.id}, 'mp', -1)">-1</button>
+                    <button class="stat-btn decrease-btn" onclick="changeStat(${character.id}, 'mp', -5)">-5</button>
+                    <button class="stat-btn decrease-btn" onclick="changeStat(${character.id}, 'mp', -10)">-10</button>
+                </div>
+                <div class="mp-bar">
+                    <div class="mp-bar-fill" id="mp-bar-${character.id}"></div>
+                </div>
+
+                <div class="stat-row">
+                    <div class="stat-label">命中力</div>
+                    <div class="simple-stat">
+                        <input type="number" value="${character.accuracy || 10}" 
+                               onchange="updateSimpleStat(${character.id}, 'accuracy', this.value)">
+                    </div>
+                </div>
+
+                <div class="stat-row">
+                    <div class="stat-label">打撃点</div>
+                    <div class="simple-stat">
+                        <input type="number" value="${character.damage || 10}" 
+                               onchange="updateSimpleStat(${character.id}, 'damage', this.value)">
+                    </div>
+                </div>
+
+                <div class="stat-row">
+                    <div class="stat-label">回避</div>
+                    <div class="simple-stat">
+                        <input type="number" value="${character.dodge}" 
+                               onchange="updateSimpleStat(${character.id}, 'dodge', this.value)">
+                    </div>
+                </div>
+
+                <div class="stat-row">
+                    <div class="stat-label">防護点</div>
+                    <div class="simple-stat">
+                        <input type="number" value="${character.protection}" 
+                               onchange="updateSimpleStat(${character.id}, 'protection', this.value)">
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="action-btn copy-btn" data-action="copy" data-id="${character.id}">複製</button>
+                    <button class="action-btn delete-btn" data-action="delete" data-id="${character.id}">削除</button>
+                </div>
+            `;
+            
+            container.appendChild(card);
+            updateBars(character.id);
+            
+            // イベントリスナーを追加
+            const copyBtn = card.querySelector('[data-action="copy"]');
+            const deleteBtn = card.querySelector('[data-action="delete"]');
+            
+            copyBtn.addEventListener('click', () => copyCharacter(character.id));
+            deleteBtn.addEventListener('click', () => deleteCharacter(character.id));
+        }
+
+        // キャラクター名を更新
+        function updateName(id, name) {
+            const character = characters.find(c => c.id === id);
+            if (character) {
+                character.name = name;
+                saveData();
+            }
+        }
+
+        // 入力フィールドから現在値を更新
+        function updateCurrentStat(id, stat, value) {
+            const character = characters.find(c => c.id === id);
+            if (!character) return;
+
+            let newValue = parseInt(value) || 0;
+            
+            // 範囲制限
+            if (newValue < 0) newValue = 0;
+            if (newValue > character[stat].max) newValue = character[stat].max;
+
+            character[stat].current = newValue;
+            document.getElementById(`${stat}-${id}`).value = newValue;
+            updateBars(id);
+            saveData();
+        }
+
+        // 最大値を更新
+        function updateMaxStat(id, stat, value) {
+            const character = characters.find(c => c.id === id);
+            if (!character) return;
+
+            let newMax = parseInt(value) || 1;
+            if (newMax < 1) newMax = 1;
+
+            character[stat].max = newMax;
+            
+            // 現在値が最大値を超えている場合は調整
+            if (character[stat].current > newMax) {
+                character[stat].current = newMax;
+                document.getElementById(`${stat}-${id}`).value = newMax;
+            }
+            
+            // 入力フィールドのmax属性を更新
+            document.getElementById(`${stat}-${id}`).setAttribute('max', newMax);
+            
+            updateBars(id);
+            saveData();
+        }
+
+        // ステータスを変更
+        function changeStat(id, stat, change) {
+            const character = characters.find(c => c.id === id);
+            if (!character) return;
+
+            character[stat].current += change;
+            
+            // 範囲制限
+            if (character[stat].current < 0) character[stat].current = 0;
+            if (character[stat].current > character[stat].max) character[stat].current = character[stat].max;
+
+            // 表示更新
+            document.getElementById(`${stat}-${id}`).value = character[stat].current;
+            updateBars(id);
+
+            saveData();
+        }
+
+        // 回避・防護点を更新
+        function updateSimpleStat(id, stat, value) {
+            const character = characters.find(c => c.id === id);
+            if (character) {
+                character[stat] = parseInt(value) || 0;
+                saveData();
+            }
+        }
+
+        // HP/MPバーを更新
+        function updateBars(id) {
+            const character = characters.find(c => c.id === id);
+            if (!character) return;
+
+            // HPバー
+            const hpBar = document.getElementById(`hp-bar-${id}`);
+            const hpPercent = (character.hp.current / character.hp.max) * 100;
+            hpBar.style.width = hpPercent + '%';
+            
+            // HPバーの色を変更
+            hpBar.className = 'hp-bar-fill';
+            if (hpPercent <= 25) {
+                hpBar.classList.add('critical');
+            } else if (hpPercent <= 50) {
+                hpBar.classList.add('low');
+            }
+
+            // MPバー
+            const mpBar = document.getElementById(`mp-bar-${id}`);
+            const mpPercent = (character.mp.current / character.mp.max) * 100;
+            mpBar.style.width = mpPercent + '%';
+        }
+
+        // キャラクターを複製
+        function copyCharacter(id) {
+            const original = characters.find(c => c.id === id);
+            if (!original) return;
+
+            const character = {
+                id: nextId,
+                name: original.name + 'のコピー',
+                hp: { current: original.hp.current, max: original.hp.max },
+                mp: { current: original.mp.current, max: original.mp.max },
+                accuracy: original.accuracy || 10,
+                damage: original.damage || 10,
+                dodge: original.dodge,
+                protection: original.protection
+            };
+            nextId++;
+            characters.push(character);
+            renderCharacter(character);
+            saveData();
+        }
+
+        // キャラクターを削除
+        function deleteCharacter(id) {
+            if (characters.length === 1) {
+                alert('最後のキャラクターは削除できません');
+                return;
+            }
+
+            // 配列から削除
+            const index = characters.findIndex(c => c.id === id);
+            if (index !== -1) {
+                characters.splice(index, 1);
+            }
+            
+            // DOMから削除（アニメーション付き）
+            const card = document.querySelector(`[data-id="${id}"]`);
+            if (card) {
+                card.style.transition = 'opacity 0.3s, transform 0.3s';
+                card.style.opacity = '0';
+                card.style.transform = 'scale(0.9)';
+                setTimeout(() => {
+                    card.remove();
+                }, 300);
+            }
+            
+            saveData();
+        }
+    </script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
