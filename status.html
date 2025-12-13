@@ -351,7 +351,10 @@
                 accuracy: 10,
                 damage: 10,
                 dodge: 10,
-                protection: 5
+                protection: 5,
+                magic: 10,
+                spiritResist: 10,
+                lifeResist: 10
             };
             nextId++;
             characters.push(character);
@@ -444,6 +447,30 @@
                     <div class="simple-stat">
                         <input type="number" value="${character.protection}" 
                                onchange="updateSimpleStat(${character.id}, 'protection', this.value)">
+                    </div>
+                </div>
+
+                <div class="stat-row">
+                    <div class="stat-label">魔力</div>
+                    <div class="simple-stat">
+                        <input type="number" value="${character.magic || 10}" 
+                               onchange="updateSimpleStat(${character.id}, 'magic', this.value)">
+                    </div>
+                </div>
+
+                <div class="stat-row">
+                    <div class="stat-label">精神抵抗力</div>
+                    <div class="simple-stat">
+                        <input type="number" value="${character.spiritResist || 10}" 
+                               onchange="updateSimpleStat(${character.id}, 'spiritResist', this.value)">
+                    </div>
+                </div>
+
+                <div class="stat-row">
+                    <div class="stat-label">生命抵抗力</div>
+                    <div class="simple-stat">
+                        <input type="number" value="${character.lifeResist || 10}" 
+                               onchange="updateSimpleStat(${character.id}, 'lifeResist', this.value)">
                     </div>
                 </div>
 
@@ -577,7 +604,10 @@
                 accuracy: original.accuracy || 10,
                 damage: original.damage || 10,
                 dodge: original.dodge,
-                protection: original.protection
+                protection: original.protection,
+                magic: original.magic || 10,
+                spiritResist: original.spiritResist || 10,
+                lifeResist: original.lifeResist || 10
             };
             nextId++;
             characters.push(character);
