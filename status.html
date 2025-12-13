@@ -11,10 +11,10 @@
             border: 1px solid #ccc;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            margin: 10px;
+            margin: 10px auto;
             padding: 20px;
-            width: calc(45% - 20px);
-            min-width: 300px;
+            width: calc(100% - 20px);
+            max-width: 900px;
         }
 
         @media (max-width: 900px) {
@@ -34,6 +34,23 @@
             text-align: center;
         }
 
+        .hp-mp-section {
+            margin-bottom: 15px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         .stat-row {
             display: flex;
             align-items: center;
@@ -46,11 +63,28 @@
             gap: 8px;
         }
 
+        .stat-row-compact {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            gap: 8px;
+        }
+
         .stat-label {
             font-weight: bold;
-            font-size: 1.1em;
+            font-size: 1em;
             color: #333;
-            min-width: 60px;
+            min-width: 80px;
+        }
+
+        .stat-label-compact {
+            font-weight: bold;
+            font-size: 0.95em;
+            color: #333;
+            flex: 1;
         }
 
         .stat-controls {
@@ -128,15 +162,16 @@
 
         .simple-stat {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
             align-items: center;
         }
 
         .simple-stat input {
-            width: 60px;
-            padding: 5px;
+            width: 70px;
+            padding: 6px;
             text-align: center;
-            font-size: 1.2em;
+            font-size: 1.1em;
+            font-weight: bold;
             border: 1px solid #ccc;
             border-radius: 3px;
         }
@@ -275,6 +310,15 @@
             .action-btn {
                 width: 100%;
             }
+
+            .simple-stat input {
+                width: 60px;
+                font-size: 1em;
+            }
+
+            .stat-label-compact {
+                font-size: 0.9em;
+            }
         }
 
     </style>
@@ -374,103 +418,107 @@
                 <input type="text" class="character-name-input" value="${character.name}" 
                        onchange="updateName(${character.id}, this.value)">
                 
-                <div class="stat-row">
-                    <div class="stat-label">HP</div>
-                    <div class="stat-controls">
-                        <input type="number" class="stat-input" id="hp-${character.id}" value="${character.hp.current}" 
-                               onchange="updateCurrentStat(${character.id}, 'hp', this.value)" min="0" max="${character.hp.max}">
-                        <span class="stat-max">/ </span>
-                        <input type="number" class="stat-max-input" value="${character.hp.max}" 
-                               onchange="updateMaxStat(${character.id}, 'hp', this.value)" min="1">
+                <div class="hp-mp-section">
+                    <div class="stat-row">
+                        <div class="stat-label">HP</div>
+                        <div class="stat-controls">
+                            <input type="number" class="stat-input" id="hp-${character.id}" value="${character.hp.current}" 
+                                   onchange="updateCurrentStat(${character.id}, 'hp', this.value)" min="0" max="${character.hp.max}">
+                            <span class="stat-max">/ </span>
+                            <input type="number" class="stat-max-input" value="${character.hp.max}" 
+                                   onchange="updateMaxStat(${character.id}, 'hp', this.value)" min="1">
+                        </div>
                     </div>
-                </div>
-                <div class="stat-buttons">
-                    <button class="stat-btn increase-btn" onclick="changeStat(${character.id}, 'hp', 1)">+1</button>
-                    <button class="stat-btn increase-btn" onclick="changeStat(${character.id}, 'hp', 5)">+5</button>
-                    <button class="stat-btn increase-btn" onclick="changeStat(${character.id}, 'hp', 10)">+10</button>
-                    <button class="stat-btn decrease-btn" onclick="changeStat(${character.id}, 'hp', -1)">-1</button>
-                    <button class="stat-btn decrease-btn" onclick="changeStat(${character.id}, 'hp', -5)">-5</button>
-                    <button class="stat-btn decrease-btn" onclick="changeStat(${character.id}, 'hp', -10)">-10</button>
-                </div>
-                <div class="hp-bar">
-                    <div class="hp-bar-fill" id="hp-bar-${character.id}"></div>
-                </div>
-
-                <div class="stat-row">
-                    <div class="stat-label">MP</div>
-                    <div class="stat-controls">
-                        <input type="number" class="stat-input" id="mp-${character.id}" value="${character.mp.current}" 
-                               onchange="updateCurrentStat(${character.id}, 'mp', this.value)" min="0" max="${character.mp.max}">
-                        <span class="stat-max">/ </span>
-                        <input type="number" class="stat-max-input" value="${character.mp.max}" 
-                               onchange="updateMaxStat(${character.id}, 'mp', this.value)" min="1">
+                    <div class="stat-buttons">
+                        <button class="stat-btn increase-btn" onclick="changeStat(${character.id}, 'hp', 1)">+1</button>
+                        <button class="stat-btn increase-btn" onclick="changeStat(${character.id}, 'hp', 5)">+5</button>
+                        <button class="stat-btn increase-btn" onclick="changeStat(${character.id}, 'hp', 10)">+10</button>
+                        <button class="stat-btn decrease-btn" onclick="changeStat(${character.id}, 'hp', -1)">-1</button>
+                        <button class="stat-btn decrease-btn" onclick="changeStat(${character.id}, 'hp', -5)">-5</button>
+                        <button class="stat-btn decrease-btn" onclick="changeStat(${character.id}, 'hp', -10)">-10</button>
                     </div>
-                </div>
-                <div class="stat-buttons">
-                    <button class="stat-btn increase-btn" onclick="changeStat(${character.id}, 'mp', 1)">+1</button>
-                    <button class="stat-btn increase-btn" onclick="changeStat(${character.id}, 'mp', 5)">+5</button>
-                    <button class="stat-btn increase-btn" onclick="changeStat(${character.id}, 'mp', 10)">+10</button>
-                    <button class="stat-btn decrease-btn" onclick="changeStat(${character.id}, 'mp', -1)">-1</button>
-                    <button class="stat-btn decrease-btn" onclick="changeStat(${character.id}, 'mp', -5)">-5</button>
-                    <button class="stat-btn decrease-btn" onclick="changeStat(${character.id}, 'mp', -10)">-10</button>
-                </div>
-                <div class="mp-bar">
-                    <div class="mp-bar-fill" id="mp-bar-${character.id}"></div>
-                </div>
+                    <div class="hp-bar">
+                        <div class="hp-bar-fill" id="hp-bar-${character.id}"></div>
+                    </div>
 
-                <div class="stat-row">
-                    <div class="stat-label">命中力</div>
-                    <div class="simple-stat">
-                        <input type="number" value="${character.accuracy || 10}" 
-                               onchange="updateSimpleStat(${character.id}, 'accuracy', this.value)">
+                    <div class="stat-row">
+                        <div class="stat-label">MP</div>
+                        <div class="stat-controls">
+                            <input type="number" class="stat-input" id="mp-${character.id}" value="${character.mp.current}" 
+                                   onchange="updateCurrentStat(${character.id}, 'mp', this.value)" min="0" max="${character.mp.max}">
+                            <span class="stat-max">/ </span>
+                            <input type="number" class="stat-max-input" value="${character.mp.max}" 
+                                   onchange="updateMaxStat(${character.id}, 'mp', this.value)" min="1">
+                        </div>
+                    </div>
+                    <div class="stat-buttons">
+                        <button class="stat-btn increase-btn" onclick="changeStat(${character.id}, 'mp', 1)">+1</button>
+                        <button class="stat-btn increase-btn" onclick="changeStat(${character.id}, 'mp', 5)">+5</button>
+                        <button class="stat-btn increase-btn" onclick="changeStat(${character.id}, 'mp', 10)">+10</button>
+                        <button class="stat-btn decrease-btn" onclick="changeStat(${character.id}, 'mp', -1)">-1</button>
+                        <button class="stat-btn decrease-btn" onclick="changeStat(${character.id}, 'mp', -5)">-5</button>
+                        <button class="stat-btn decrease-btn" onclick="changeStat(${character.id}, 'mp', -10)">-10</button>
+                    </div>
+                    <div class="mp-bar">
+                        <div class="mp-bar-fill" id="mp-bar-${character.id}"></div>
                     </div>
                 </div>
 
-                <div class="stat-row">
-                    <div class="stat-label">打撃点</div>
-                    <div class="simple-stat">
-                        <input type="number" value="${character.damage || 10}" 
-                               onchange="updateSimpleStat(${character.id}, 'damage', this.value)">
+                <div class="stats-grid">
+                    <div class="stat-row-compact">
+                        <div class="stat-label-compact">命中力</div>
+                        <div class="simple-stat">
+                            <input type="number" value="${character.accuracy || 10}" 
+                                   onchange="updateSimpleStat(${character.id}, 'accuracy', this.value)">
+                        </div>
                     </div>
-                </div>
 
-                <div class="stat-row">
-                    <div class="stat-label">回避</div>
-                    <div class="simple-stat">
-                        <input type="number" value="${character.dodge}" 
-                               onchange="updateSimpleStat(${character.id}, 'dodge', this.value)">
+                    <div class="stat-row-compact">
+                        <div class="stat-label-compact">打撃点</div>
+                        <div class="simple-stat">
+                            <input type="number" value="${character.damage || 10}" 
+                                   onchange="updateSimpleStat(${character.id}, 'damage', this.value)">
+                        </div>
                     </div>
-                </div>
 
-                <div class="stat-row">
-                    <div class="stat-label">防護点</div>
-                    <div class="simple-stat">
-                        <input type="number" value="${character.protection}" 
-                               onchange="updateSimpleStat(${character.id}, 'protection', this.value)">
+                    <div class="stat-row-compact">
+                        <div class="stat-label-compact">回避</div>
+                        <div class="simple-stat">
+                            <input type="number" value="${character.dodge}" 
+                                   onchange="updateSimpleStat(${character.id}, 'dodge', this.value)">
+                        </div>
                     </div>
-                </div>
 
-                <div class="stat-row">
-                    <div class="stat-label">魔力</div>
-                    <div class="simple-stat">
-                        <input type="number" value="${character.magic || 10}" 
-                               onchange="updateSimpleStat(${character.id}, 'magic', this.value)">
+                    <div class="stat-row-compact">
+                        <div class="stat-label-compact">防護点</div>
+                        <div class="simple-stat">
+                            <input type="number" value="${character.protection}" 
+                                   onchange="updateSimpleStat(${character.id}, 'protection', this.value)">
+                        </div>
                     </div>
-                </div>
 
-                <div class="stat-row">
-                    <div class="stat-label">精神抵抗力</div>
-                    <div class="simple-stat">
-                        <input type="number" value="${character.spiritResist || 10}" 
-                               onchange="updateSimpleStat(${character.id}, 'spiritResist', this.value)">
+                    <div class="stat-row-compact">
+                        <div class="stat-label-compact">魔力</div>
+                        <div class="simple-stat">
+                            <input type="number" value="${character.magic || 10}" 
+                                   onchange="updateSimpleStat(${character.id}, 'magic', this.value)">
+                        </div>
                     </div>
-                </div>
 
-                <div class="stat-row">
-                    <div class="stat-label">生命抵抗力</div>
-                    <div class="simple-stat">
-                        <input type="number" value="${character.lifeResist || 10}" 
-                               onchange="updateSimpleStat(${character.id}, 'lifeResist', this.value)">
+                    <div class="stat-row-compact">
+                        <div class="stat-label-compact">精神抵抗力</div>
+                        <div class="simple-stat">
+                            <input type="number" value="${character.spiritResist || 10}" 
+                                   onchange="updateSimpleStat(${character.id}, 'spiritResist', this.value)">
+                        </div>
+                    </div>
+
+                    <div class="stat-row-compact">
+                        <div class="stat-label-compact">生命抵抗力</div>
+                        <div class="simple-stat">
+                            <input type="number" value="${character.lifeResist || 10}" 
+                                   onchange="updateSimpleStat(${character.id}, 'lifeResist', this.value)">
+                        </div>
                     </div>
                 </div>
 
