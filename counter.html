@@ -1,250 +1,233 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <meta name="robots" content="noindex">
-    <title>星辰光カウンター</title>
-    <style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>星辰光カウンター</title>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    :root {
+      --bs-body-bg: #1a1a2e;
+      --bs-body-color: #e0e0e0;
+      --surface: #16213e;
+      --surface2: #0f3460;
+      --border: #2a2a4a;
+      --accent: #e94560;
+      --ast-red: #e74c3c;
+      --ast-blue: #3498db;
+      --ast-green: #2ecc71;
+      --ast-white: #ecf0f1;
+      --ast-black: #7f8c8d;
+      --dim: #8a8a9a;
+    }
+    body {
+      background-color: var(--bs-body-bg);
+      color: var(--bs-body-color);
+      font-family: 'Segoe UI','Hiragino Sans','Meiryo',sans-serif;
+    }
 
-        .card {
-            background-color: white;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            margin: 10px;
-            padding: 20px;
-            width: 18%;
-            min-width: 150px;
-            text-align: center;
-        }
+    /* Navbar */
+    .navbar { background-color: var(--surface) !important; border-bottom: 1px solid var(--border); }
+    .navbar-brand { color: var(--accent) !important; font-weight: 700; font-size: 1.15rem; }
+    .navbar-nav .nav-link { color: var(--bs-body-color) !important; font-size: .9rem; padding: .4rem .7rem; }
+    .navbar-nav .nav-link:hover, .navbar-nav .nav-link.active { color: var(--accent) !important; }
+    .navbar-toggler { border-color: var(--border); }
+    .navbar-toggler-icon { filter: invert(1); }
 
-        h1 {
-            text-align: center;
-            color: #333;
-            margin: 30px 0;
-        }
+    /* Page title */
+    .page-title { text-align:center; font-size:1.6rem; font-weight:700; color:var(--accent); letter-spacing:.08em; margin:1.5rem 0 1rem; }
 
-        .color-name {
-            font-size: 1.5em;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
+    /* Round bar */
+    .round-bar { display:flex; align-items:center; justify-content:center; gap:.75rem; margin-bottom:.75rem; padding:.5rem 1rem; background:var(--surface); border-radius:8px; border:1px solid var(--border); flex-wrap:wrap; }
+    .round-bar .lbl { font-size:.85rem; color:var(--dim); }
+    .round-num { font-size:1.4rem; font-weight:700; min-width:2ch; text-align:center; }
+    .btn-r { padding:.3rem .8rem; border:1px solid var(--border); background:var(--surface2); color:var(--bs-body-color); border-radius:6px; cursor:pointer; font-size:.8rem; transition:background .15s; }
+    .btn-r:hover { background:var(--accent); color:#fff; }
 
-        .red .color-name { color: #ff4444; }
-        .blue .color-name { color: #4488ff; }
-        .green .color-name { color: #44ff44; }
-        .white .color-name { color: #888; }
-        .black .color-name { color: #333; }
+    /* Info */
+    .info-row { display:flex; justify-content:center; gap:1.5rem; margin-bottom:.75rem; font-size:.85rem; flex-wrap:wrap; }
+    .total-val { font-weight:700; font-size:1rem; }
+    .thr { color:var(--ast-green); }
+    .thr.off { color:var(--dim); }
 
-        .count-display {
-            font-size: 3em;
-            font-weight: bold;
-            margin: 15px 0;
-            color: #333;
-            user-select: none;
-        }
+    /* Color card */
+    .cc { display:grid; grid-template-columns:60px 1fr; gap:0 .75rem; padding:.6rem .8rem; border-radius:10px; border:1px solid var(--border); margin-bottom:.5rem; }
+    .cc[data-c="red"]   { background:rgba(231,76,60,.12);   border-color:var(--ast-red); }
+    .cc[data-c="blue"]  { background:rgba(52,152,219,.12);  border-color:var(--ast-blue); }
+    .cc[data-c="green"] { background:rgba(46,204,113,.12);  border-color:var(--ast-green); }
+    .cc[data-c="white"] { background:rgba(236,240,241,.08); border-color:var(--ast-white); }
+    .cc[data-c="black"] { background:rgba(127,140,141,.10); border-color:var(--ast-black); }
+    .cn { grid-row:1/3; display:flex; flex-direction:column; align-items:center; justify-content:center; font-weight:700; font-size:.95rem; }
+    .cn .pv { font-size:1.6rem; line-height:1; }
+    .cn .sl { font-size:.65rem; color:var(--dim); margin-top:2px; }
 
-        .button-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
+    .ct { display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; }
+    .bg { display:flex; gap:3px; }
+    .ba { width:32px; height:32px; border:1px solid var(--border); background:var(--surface); color:var(--bs-body-color); border-radius:6px; font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0; transition:background .15s; }
+    .ba:hover { background:var(--surface2); }
+    .ba:active { transform:scale(.95); }
+    .ba.s { width:36px; font-size:.7rem; }
+    .mc { margin-left:auto; display:flex; align-items:center; gap:4px; font-size:.75rem; color:var(--dim); }
+    .mc .bm { width:22px; height:22px; border:1px solid var(--border); background:var(--surface); color:var(--bs-body-color); border-radius:4px; font-size:.75rem; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0; }
+    .mn { min-width:1.2ch; text-align:center; font-weight:600; color:var(--bs-body-color); }
 
-        .count-btn {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 1.2em;
-            font-weight: bold;
-            cursor: pointer;
-            background-color: #f9f9f9;
-            transition: all 0.2s;
-        }
+    .cb { display:flex; align-items:center; gap:.5rem; margin-top:4px; }
+    .ul { font-size:.7rem; color:var(--dim); white-space:nowrap; }
+    .ub { display:flex; gap:3px; }
+    .bu { width:28px; height:24px; border:1px solid var(--border); background:var(--surface); color:var(--bs-body-color); border-radius:4px; font-size:.7rem; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0; }
+    .ubw { flex:1; height:14px; background:rgba(255,255,255,.06); border-radius:7px; overflow:hidden; }
+    .ubf { height:100%; border-radius:7px; transition:width .2s; }
+    .cc[data-c="red"]   .ubf { background:var(--ast-red); }
+    .cc[data-c="blue"]  .ubf { background:var(--ast-blue); }
+    .cc[data-c="green"] .ubf { background:var(--ast-green); }
+    .cc[data-c="white"] .ubf { background:var(--ast-white); }
+    .cc[data-c="black"] .ubf { background:var(--ast-black); }
+    .ubf.ov { background:var(--accent) !important; }
+    .ut { font-size:.75rem; white-space:nowrap; min-width:5ch; text-align:right; }
 
-        .count-btn:hover {
-            background-color: #e9e9e9;
-        }
+    /* Footer */
+    .fb { display:flex; justify-content:center; gap:.75rem; margin-top:1rem; flex-wrap:wrap; }
+    .bf { padding:.4rem 1.2rem; border:1px solid var(--border); background:var(--surface); color:var(--bs-body-color); border-radius:6px; cursor:pointer; font-size:.8rem; transition:background .15s; }
+    .bf:hover { background:var(--accent); color:#fff; }
+    .bf.dg { border-color:var(--accent); }
 
-        .count-btn:active {
-            transform: scale(0.95);
-        }
-
-        .decrease-btn {
-            color: #ff4444;
-        }
-
-        .increase-btn {
-            color: #44ff44;
-        }
-
-        .reset-container {
-            text-align: center;
-            margin-top: 30px;
-        }
-
-        .reset-all {
-            background-color: #333;
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            border-radius: 5px;
-            font-size: 1.1em;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .reset-all:hover {
-            background-color: #555;
-        }
-
-        .reset-all:active {
-            transform: scale(0.95);
-        }
-
-    </style>
+    /* Log */
+    .ls { margin-top:1rem; }
+    .ls summary { cursor:pointer; font-size:.85rem; color:var(--dim); text-align:center; }
+    .ll { margin-top:.4rem; max-height:200px; overflow-y:auto; font-size:.75rem; color:var(--dim); padding:.5rem; background:var(--surface); border-radius:6px; }
+    .ll div { padding:2px 0; border-bottom:1px solid var(--border); }
+  </style>
 </head>
 <body>
 
-    <header class="header">
-        <div class="title">
-            <h3>アステリズムルール</h3>
-        </div>
-        <nav>
-            <ul id="header-menu">
-                <li><a href="index.html">ホーム</a></li>
-                <li><a href="world.html">世界観</a></li>
-                <li><a href="character.html">キャラクター</a></li>
-                <li><a href="rule.html">ルール</a></li>
-                <li><a href="asterism.html">星辰光</a></li>
-                <li><a href="asterism2.html">星辰光2</a></li>
-                <li><a href="town.html">古都アルザス・ロレーヌ</a></li>
-                <li><a href="item.html">アイテム</a></li>
-                <li><a href="data.html">PDF資料</a></li>
-                <li><a href="counter.html">カウンター</a></li>
-                <li><a href="status.html">HP管理ツール</a></li>
-            </ul>
-        </nav>
-        <div id="hamburger" class="hamburger">
-            <span></span><span></span><span></span>
-        </div>
-    </header>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="index.html">アステリズムルール</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link" href="index.html">ホーム</a></li>
+          <li class="nav-item"><a class="nav-link" href="world.html">世界観</a></li>
+          <li class="nav-item"><a class="nav-link" href="character.html">キャラクター</a></li>
+          <li class="nav-item"><a class="nav-link" href="rule.html">ルール</a></li>
+          <li class="nav-item"><a class="nav-link" href="asterism.html">星辰光</a></li>
+          <li class="nav-item"><a class="nav-link" href="asterism2.html">星辰光2</a></li>
+          <li class="nav-item"><a class="nav-link" href="town.html">古都アルザス・ロレーヌ</a></li>
+          <li class="nav-item"><a class="nav-link" href="item.html">アイテム</a></li>
+          <li class="nav-item"><a class="nav-link" href="data.html">PDF資料</a></li>
+          <li class="nav-item"><a class="nav-link active" href="counter.html">カウンター</a></li>
+          <li class="nav-item"><a class="nav-link" href="status.html">HP管理ツール</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-    <div class="container">
-        <h1>星辰光カウンター</h1>
-        
-        <div class="card-container">
-            <div class="card red" data-color="red">
-                <div class="color-name">赤</div>
-                <div class="count-display" id="red-count">0</div>
-                <div class="button-group">
-                    <button class="count-btn decrease-btn" onclick="changeCount('red', -1)">-</button>
-                    <button class="count-btn increase-btn" onclick="changeCount('red', 1)">+</button>
-                </div>
-            </div>
+  <!-- Main -->
+  <div class="container" style="max-width:640px;padding-top:.5rem">
+    <h1 class="page-title">星辰光カウンター</h1>
 
-            <div class="card blue" data-color="blue">
-                <div class="color-name">青</div>
-                <div class="count-display" id="blue-count">0</div>
-                <div class="button-group">
-                    <button class="count-btn decrease-btn" onclick="changeCount('blue', -1)">-</button>
-                    <button class="count-btn increase-btn" onclick="changeCount('blue', 1)">+</button>
-                </div>
-            </div>
+    <div class="round-bar">
+      <span class="lbl">ラウンド</span>
+      <span class="round-num" id="rn">1</span>
+      <button class="btn-r" onclick="nextRound()">次のラウンド ▶</button>
+    </div>
 
-            <div class="card green" data-color="green">
-                <div class="color-name">緑</div>
-                <div class="count-display" id="green-count">0</div>
-                <div class="button-group">
-                    <button class="count-btn decrease-btn" onclick="changeCount('green', -1)">-</button>
-                    <button class="count-btn increase-btn" onclick="changeCount('green', 1)">+</button>
-                </div>
-            </div>
+    <div class="info-row">
+      <span>合計色点数: <span class="total-val" id="tp">0</span></span>
+      <span id="tb" class="thr off">共感ボーナス（15点以上）: ✗</span>
+    </div>
 
-            <div class="card white" data-color="white">
-                <div class="color-name">白</div>
-                <div class="count-display" id="white-count">0</div>
-                <div class="button-group">
-                    <button class="count-btn decrease-btn" onclick="changeCount('white', -1)">-</button>
-                    <button class="count-btn increase-btn" onclick="changeCount('white', 1)">+</button>
-                </div>
-            </div>
+    <div id="cc"></div>
 
-            <div class="card black" data-color="black">
-                <div class="color-name">黒</div>
-                <div class="count-display" id="black-count">0</div>
-                <div class="button-group">
-                    <button class="count-btn decrease-btn" onclick="changeCount('black', -1)">-</button>
-                    <button class="count-btn increase-btn" onclick="changeCount('black', 1)">+</button>
-                </div>
-            </div>
-        </div>
+    <div class="fb">
+      <button class="bf" onclick="initBattle()">戦闘開始（初期化）</button>
+      <button class="bf dg" onclick="fullReset()">全リセット</button>
+    </div>
 
-        <div class="reset-container">
-            <button class="reset-all" onclick="resetAll()">全リセット</button>
-        </div>
+    <div class="ls">
+      <details>
+        <summary>操作ログ</summary>
+        <div class="ll" id="lg"></div>
+      </details>
+    </div>
+  </div>
 
-    <script>
-        // カウンターの状態を管理
-        let counts = {
-            red: 0,
-            blue: 0,
-            green: 0,
-            white: 0,
-            black: 0
-        };
+  <!-- Bootstrap 5 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+  var COLORS=[
+    {id:'red',n:'赤',l:'情熱'},
+    {id:'blue',n:'青',l:'完成'},
+    {id:'green',n:'緑',l:'調和'},
+    {id:'white',n:'白',l:'秩序'},
+    {id:'black',n:'黒',l:'停滞'}
+  ];
+  var S={round:1,p:{red:0,blue:0,green:0,white:0,black:0},u:{red:0,blue:0,green:0,white:0,black:0},m:{red:1,blue:1,green:1,white:1,black:1}};
+  var K='ast_counter_v2',logs=[];
 
-        // カウントを変更する関数
-        function changeCount(color, change) {
-            const newCount = counts[color] + change;
-            
-            // 0未満にはならないようにする
-            if (newCount < 0) return;
-            
-            counts[color] = newCount;
-            updateDisplay(color);
-            
-            // クリック時のフィードバック効果
-            const counter = document.querySelector(`[data-color="${color}"]`);
-            counter.style.transform = 'scale(0.98)';
-            setTimeout(() => {
-                counter.style.transform = '';
-            }, 100);
-        }
+  function sv(){try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}}
+  function ld(){try{var s=localStorage.getItem(K);if(s){var d=JSON.parse(s);if(d.p)S=d}}catch(e){}}
 
-        // 表示を更新する関数
-        function updateDisplay(color) {
-            const countElement = document.getElementById(`${color}-count`);
-            countElement.textContent = counts[color];
-            
-            // カウントに応じてアニメーション
-            countElement.style.transform = 'scale(1.15)';
-            setTimeout(() => {
-                countElement.style.transform = 'scale(1)';
-            }, 150);
-        }
+  function al(m){logs.unshift('R'+S.round+' | '+m);if(logs.length>100)logs.pop();rl()}
+  function rl(){document.getElementById('lg').innerHTML=logs.map(function(l){return'<div>'+l+'</div>'}).join('')}
 
-        // 全てリセットする関数
-        function resetAll() {
-            Object.keys(counts).forEach(color => {
-                counts[color] = 0;
-                updateDisplay(color);
-            });
-        }
+  function gt(){var t=0;COLORS.forEach(function(c){t+=S.p[c.id]});return t}
 
+  function render(){
+    document.getElementById('rn').textContent=S.round;
+    var t=gt();
+    document.getElementById('tp').textContent=t;
+    var b=document.getElementById('tb');
+    if(t>=15){b.textContent='共感ボーナス（15点以上）: ✓';b.className='thr'}
+    else{b.textContent='共感ボーナス（15点以上）: ✗';b.className='thr off'}
 
+    var ct=document.getElementById('cc');ct.innerHTML='';
+    COLORS.forEach(function(c){
+      var p=S.p[c.id],u=S.u[c.id],mm=S.m[c.id];
+      var pc=p>0?Math.min(u/p*100,100):0,ov=u>p;
+      var d=document.createElement('div');d.className='cc';d.setAttribute('data-c',c.id);
+      d.innerHTML=
+        '<div class="cn"><div>'+c.n+'</div><div class="pv">'+p+'</div><div class="sl">'+c.l+'</div></div>'+
+        '<div class="ct">'+
+          '<div class="bg">'+
+            '<button class="ba" onclick="cp(\''+c.id+'\',-1)">−</button>'+
+            '<button class="ba" onclick="cp(\''+c.id+'\',1)">＋</button>'+
+            '<button class="ba s" onclick="cp(\''+c.id+'\',3)">+3</button>'+
+          '</div>'+
+          '<div class="mc">担当<button class="bm" onclick="cm(\''+c.id+'\',-1)">−</button><span class="mn">'+mm+'</span><button class="bm" onclick="cm(\''+c.id+'\',1)">＋</button>人</div>'+
+        '</div>'+
+        '<div class="cb">'+
+          '<span class="ul">使用</span>'+
+          '<div class="ub">'+
+            '<button class="bu" onclick="cu(\''+c.id+'\',-1)">−</button>'+
+            '<button class="bu" onclick="cu(\''+c.id+'\',1)">+1</button>'+
+            '<button class="bu" onclick="cu(\''+c.id+'\',3)">+3</button>'+
+            '<button class="bu" onclick="cu(\''+c.id+'\',5)">+5</button>'+
+            '<button class="bu" onclick="cu(\''+c.id+'\',7)">+7</button>'+
+          '</div>'+
+          '<div class="ubw"><div class="ubf'+(ov?' ov':'')+'" style="width:'+pc+'%"></div></div>'+
+          '<span class="ut"'+(ov?' style="color:var(--accent)"':'')+'>'+u+'/'+p+'</span>'+
+        '</div>';
+      ct.appendChild(d);
+    });
+    sv();
+  }
 
-        // 初期表示の設定
-        Object.keys(counts).forEach(color => {
-            updateDisplay(color);
-        });
-    </script>
+  function fn(id){return COLORS.find(function(c){return c.id===id}).n}
+  function cp(c,d){S.p[c]=Math.max(0,S.p[c]+d);al(fn(c)+'プール '+(d>0?'+':'')+d+' → '+S.p[c]);render()}
+  function cu(c,d){S.u[c]=Math.max(0,S.u[c]+d);al(fn(c)+'使用 '+(d>0?'+':'')+d+' → '+S.u[c]+'/'+S.p[c]);render()}
+  function cm(c,d){S.m[c]=Math.max(0,S.m[c]+d);render()}
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="script.js"></script>
+  function nextRound(){S.round++;COLORS.forEach(function(c){S.u[c.id]=0});al('── ラウンド'+S.round+'開始 ──');render()}
+  function initBattle(){S.round=1;COLORS.forEach(function(c){S.p[c.id]=S.m[c.id];S.u[c.id]=0});al('=== 戦闘開始 ===');render()}
+  function fullReset(){if(!confirm('全てリセットしますか？'))return;S.round=1;COLORS.forEach(function(c){S.p[c.id]=0;S.u[c.id]=0;S.m[c.id]=1});logs.length=0;al('全リセット');render()}
+
+  ld();render();
+  </script>
 </body>
 </html>
