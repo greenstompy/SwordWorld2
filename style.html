@@ -1,0 +1,176 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <meta name="robots" content="noindex">
+
+    <style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Noto+Sans+JP:wght@400;500&display=swap');
+ 
+  :root {
+    --bg:      #111111;
+    --surface: #1a1a1a;
+    --border:  #333333;
+    --text:    #cccccc;
+    --muted:   #666666;
+    --label:   #888888;
+  }
+ 
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    padding: 32px 24px;
+  }
+ 
+  /* ── カード ── */
+  .waza-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    max-width: 480px;
+  }
+ 
+  /* 流派名 */
+  .ryuha {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: .06em;
+    margin-bottom: 4px;
+  }
+ 
+  /* 行 */
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 24px;
+    border-top: 1px solid var(--border);
+    padding: 6px 0;
+  }
+ 
+  .field {
+    display: flex;
+    gap: 6px;
+    align-items: baseline;
+  }
+ 
+  .label {
+    font-size: 11px;
+    color: var(--label);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+ 
+  .value {
+    font-size: 13px;
+    color: var(--text);
+  }
+ 
+  /* 技名行 */
+  .row-name {
+    border-top: none;
+    padding-bottom: 6px;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .waza-name {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .waza-points {
+    font-size: 12px;
+    color: var(--muted);
+  }
+ 
+  /* 効果テキスト欄 */
+  .effect-box {
+    border-top: 1px solid var(--border);
+    padding-top: 8px;
+    margin-top: 2px;
+  }
+  .effect-box .label {
+    display: block;
+    margin-bottom: 4px;
+  }
+  .effect-text {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.7;
+  }
+</style>
+
+</head>
+<body>
+        
+
+    <header class="header">
+        <div class="title">
+            <h3>アステリズムルール</h3>
+        </div>
+        <nav>
+            <ul id="header-menu">
+                <li><a href="index.html">ホーム</a></li>
+                <li><a href="world.html">世界観</a></li>
+                <li><a href="character.html">キャラクター</a></li>
+                <li><a href="rule.html">ルール</a></li>
+                <li><a href="asterism.html">星辰光</a></li>
+                <li><a href="town.html">古都アルザス・ロレーヌ</a></li>
+                <li><a href="item.html">アイテム</a></li>
+                <li><a href="data.html">PDF資料</a></li>
+                <li><a href="style.html">流派</a></li>
+                <li><a href="counter.html">カウンター</a></li>
+                <li><a href="status.html">HP管理ツール</a></li>
+            </ul>
+        </nav>
+        <div id="hamburger" class="hamburger">
+            <span></span><span></span><span></span>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="waza-card">
+            
+            <div class="ryuha">ウルマリ王国宮廷剣術 ― キメガス式</div>
+            <div class="row row-name">
+                <span class="waza-name">蝶のように舞いガキのように刺す</span>
+                <span class="waza-points">名誉点 20</span>
+            </div>
+            
+            <div class="row">
+                <div class="field"><span class="label">タイプ</span><span class="value">常時型</span></div>
+                <div class="field"><span class="label">前提</span><span class="value">挑発攻撃1</span></div>
+            </div>
+            
+            <div class="row">
+                <div class="field"><span class="label">限定条件</span><span class="value">ブレードスカート</span></div>
+            </div>
+            
+            <div class="row">
+                <div class="field"><span class="label">使用</span><span class="value">―</span></div>
+                <div class="field"><span class="label">適用</span><span class="value">―</span></div>
+            </div>
+            
+            <div class="row">
+                <div class="field"><span class="label">リスク</span><span class="value">無し</span></div>
+            </div>
+            
+            <div class="effect-box">
+                <span class="label">効果</span>
+            <p class="effect-text">ブレードスカートのC値を−1する。</p>
+          </div>
+        </div>
+    </div>    
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
